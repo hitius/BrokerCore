@@ -1,5 +1,5 @@
 package com.ing.brokercore.enums;
 
-public enum OrderType {
+public enum OrderSide {
     BUY, SELL;
 }

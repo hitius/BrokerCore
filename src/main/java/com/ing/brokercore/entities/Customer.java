@@ -20,8 +20,6 @@ public class Customer {
     private String name;
     private String email;
 
-    private Double balance = 0.0;
-
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<Asset> assets;

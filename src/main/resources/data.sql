@@ -1,5 +1,5 @@
-INSERT INTO customer (id, name, email, balance) VALUES (1, 'Kutay incirci', 'kutay.incirci@gmail.com', 0);
-INSERT INTO customer (id, name, email, balance) VALUES (2, 'hebelek dubelek', 'hebelek@dubelek.com', 0);
+INSERT INTO customer (id, name, email) VALUES (1, 'Kutay incirci', 'kutay.incirci@gmail.com');
+INSERT INTO customer (id, name, email) VALUES (2, 'hebelek dubelek', 'hebelek@dubelek.com');
 
 INSERT INTO asset (id, customer_id, asset_name, size, usable_size) VALUES (1, 1, 'TRY', 1000.00, 1000.00);
 INSERT INTO asset (id, customer_id, asset_name, size, usable_size) VALUES (2, 2, 'TRY', 1500.00, 1500.00);

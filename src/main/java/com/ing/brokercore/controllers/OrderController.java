@@ -18,6 +18,16 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * create order for customer by given params
+     * @param customerId
+     * @param assetName
+     * @param type
+     * @param size
+     * @param price
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/create")
     public ResponseEntity<Orders> createOrder(@RequestParam Long customerId,
                               @RequestParam String assetName,
@@ -29,6 +39,15 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    /**
+     * lists orders for customer in given date range
+     * Date format is dd-MM-yyyy
+     * @param customerId
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/listOrders")
     public ResponseEntity<List<Orders>> listOrders(@RequestParam Long customerId,
                                                    @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
@@ -38,6 +57,12 @@ public class OrderController {
         return ResponseEntity.ok(ordersList);
     }
 
+    /**
+     * delete order if only status is PENDING
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<Orders> deleteOrder(@RequestParam Long orderId) throws Exception {
 

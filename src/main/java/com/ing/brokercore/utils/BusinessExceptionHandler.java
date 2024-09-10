@@ -11,6 +11,12 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class BusinessExceptionHandler {
 
+    /**
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
         // for development

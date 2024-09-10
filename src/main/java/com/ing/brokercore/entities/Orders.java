@@ -1,9 +1,8 @@
 package com.ing.brokercore.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.enums.OrderStatus;
-import com.ing.brokercore.enums.OrderType;
 import jakarta.persistence.*;
 import java.util.Date;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Orders {
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
-    private OrderType orderType;
+    private OrderSide orderSide;
 
     private Date createDate;
 
