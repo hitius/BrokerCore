@@ -2,7 +2,9 @@ package com.ing.brokercore;
 
 import com.ing.brokercore.controllers.OrderController;
 import com.ing.brokercore.entities.Orders;
+import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.services.OrderService;
+import com.ing.brokercore.utils.OrderRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,14 +47,21 @@ public class OrderControllerTest {
         // Setup
         Long customerId = 1L;
         String assetName = "AssetName";
-        String type = "BUY";
+        OrderSide orderSide = OrderSide.BUY;
         Double size = 10.0;
         Double price = 100.0;
         Orders mockOrder = new Orders();
-        when(orderService.createOrder(customerId, assetName, type, size, price)).thenReturn(mockOrder);
+        when(orderService.createOrder(customerId, assetName, orderSide, size, price)).thenReturn(mockOrder);
+
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(customerId);
+        orderRequest.setAssetName(assetName);
+        orderRequest.setOrderSide(orderSide.toString());
+        orderRequest.setSize(size);
+        orderRequest.setPrice(price);
 
         // Execute
-        ResponseEntity<Orders> response = orderController.createOrder(customerId, assetName, type, size, price);
+        ResponseEntity<Orders> response = orderController.createOrder(orderRequest);
 
         // Verify
         assertEquals(200, response.getStatusCodeValue());

@@ -5,7 +5,6 @@ import com.ing.brokercore.entities.Customer;
 import com.ing.brokercore.entities.Orders;
 import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.enums.OrderStatus;
-import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.repositories.AssetRepository;
 import com.ing.brokercore.repositories.CustomerRepository;
 import com.ing.brokercore.repositories.OrderRepository;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -39,20 +37,20 @@ public class OrderService {
      * Creates order. checks size for able to selling
      * @param customerId
      * @param assetName
-     * @param type
+     * @param orderSide
      * @param size
      * @param price
      * @return
      * @throws Exception
      */
     @Transactional
-    public Orders createOrder(Long customerId, String assetName, String type, Double size, Double price) throws Exception {
+    public Orders createOrder(Long customerId, String assetName, OrderSide orderSide, Double size, Double price) throws Exception {
 
         Customer customer = customerService.getCustomerById(customerId);
 
         Asset asset = assetRepository.findByCustomerAndAssetName(customer, assetName).orElseThrow(() -> new BusinessException(BusinessException.ASSET_NOT_FOUND));
 
-        if (type.equals(OrderSide.SELL.toString()) && asset.getUsableSize() < size) {
+        if (orderSide.equals(OrderSide.SELL) && asset.getUsableSize() < size) {
             throw new BusinessException(NOT_ENOUGH_ASSET_TO_SELL);
         }
 
@@ -63,7 +61,7 @@ public class OrderService {
         Orders order = new Orders();
         order.setCustomer(customer);
         order.setAssetName(assetName);
-        order.setOrderSide(OrderSide.valueOf(type));
+        order.setOrderSide(orderSide);
         order.setSize(size);
         order.setPrice(price);
         order.setStatus(OrderStatus.PENDING);
@@ -77,7 +75,7 @@ public class OrderService {
     }
 
     /**
-     * gives order list
+     * gives order list. not showing cancelled
      * @param customerId
      * @param startDate
      * @param endDate
@@ -86,7 +84,7 @@ public class OrderService {
      */
     public List<Orders> getOrderListForCustomer(Long customerId, Date startDate, Date endDate) throws Exception {
 
-        List<Orders> orderList = orderRepository.findByCustomerIdAndCreateDateBetween(customerId, startDate, endDate);
+        List<Orders> orderList = orderRepository.findByCustomerIdAndCreateDateBetweenAndStatusIsNot(customerId, startDate, endDate, OrderStatus.CANCELLED);
 
         if (orderList.isEmpty()) {
             throw new BusinessException(CUSTOMER_DOES_NOT_HAVE_ANY_ORDER);

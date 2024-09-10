@@ -1,10 +1,14 @@
 package com.ing.brokercore.controllers;
 
 import com.ing.brokercore.entities.Orders;
+import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.services.OrderService;
+import com.ing.brokercore.utils.OrderRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -12,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/orders")
 public class OrderController {
 
@@ -29,13 +34,9 @@ public class OrderController {
      * @throws Exception
      */
     @PostMapping("/create")
-    public ResponseEntity<Orders> createOrder(@RequestParam Long customerId,
-                              @RequestParam String assetName,
-                              @RequestParam String type,
-                              @RequestParam Double size,
-                              @RequestParam Double price) throws Exception {
+    public ResponseEntity<Orders> createOrder(@Valid @RequestBody OrderRequest orderRequest) throws Exception {
 
-        Orders order = orderService.createOrder(customerId, assetName, type, size, price);
+        Orders order = orderService.createOrder(orderRequest.getCustomerId(), orderRequest.getAssetName(), OrderSide.valueOf(orderRequest.getOrderSide()), orderRequest.getSize(), orderRequest.getPrice());
         return ResponseEntity.ok(order);
     }
 
