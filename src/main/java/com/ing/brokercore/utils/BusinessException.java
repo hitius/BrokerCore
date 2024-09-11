@@ -14,6 +14,8 @@ public class BusinessException extends Exception {
     public static final String CUSTOMER_DOES_NOT_HAVE_ANY_ORDER = "Customer does not have any order.";
     public static final String ORDER_NOT_FOUND = "Order not found.";
     public static final String ONLY_PENDING_ORDERS_ALLOWED_TO_DELETE = "You can only delete orders by status PENDING. Your order status is: ";
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String ORDER_IS_NOT_PENDING = "Order is not pending and cannot be matched.";
 
     public BusinessException(String message) {
         super(message);

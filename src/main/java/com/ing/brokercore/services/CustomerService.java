@@ -19,9 +19,10 @@ public class CustomerService {
      * @param customerId
      * @return
      */
-    public Customer getCustomerById(Long customerId) throws Exception {
+    public Customer getCustomerById(Long customerId) throws BusinessException {
         return customerRepository.findById(customerId).orElseThrow(
                 () -> new BusinessException(CUSTOMER_NOT_FOUND)
         );
     }
+
 }

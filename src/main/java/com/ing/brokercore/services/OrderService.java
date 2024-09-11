@@ -24,14 +24,12 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
     @Autowired
     private AssetRepository assetRepository;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private AssetService assetService;
 
     /**
      * Creates order. checks size for able to selling
@@ -48,7 +46,7 @@ public class OrderService {
 
         Customer customer = customerService.getCustomerById(customerId);
 
-        Asset asset = assetRepository.findByCustomerAndAssetName(customer, assetName).orElseThrow(() -> new BusinessException(BusinessException.ASSET_NOT_FOUND));
+        Asset asset = assetService.findByCustomerIdAndAssetName(customer.getId(), assetName);
 
         if (orderSide.equals(OrderSide.SELL) && asset.getUsableSize() < size) {
             throw new BusinessException(NOT_ENOUGH_ASSET_TO_SELL);
@@ -107,8 +105,7 @@ public class OrderService {
             throw new BusinessException(ONLY_PENDING_ORDERS_ALLOWED_TO_DELETE + order.getStatus());
         }
 
-        Asset asset = assetRepository.findByCustomerIdAndAssetName(order.getCustomer().getId(), Constants.TRY)
-                .orElseThrow(() -> new BusinessException(ASSET_NOT_FOUND));
+        Asset asset = assetService.findByCustomerIdAndAssetName(order.getCustomer().getId(), Constants.TRY);
 
         // changing status to cancelled
         order.setStatus(OrderStatus.CANCELLED);
@@ -119,5 +116,51 @@ public class OrderService {
         orderRepository.save(order);
         assetRepository.save(asset);
         return order;
+    }
+
+    /**
+     * This method matchs pending orders
+     * @param orderId
+     * @return
+     * @throws BusinessException
+     */
+    @Transactional
+    public Orders matchPendingOrder(Long orderId) throws BusinessException {
+        Orders order = findOrderByOrderId(orderId);
+
+        if (!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new BusinessException(BusinessException.ORDER_IS_NOT_PENDING);
+        }
+
+        Asset tryAsset = assetService.findByCustomerIdAndAssetName(order.getCustomer().getId(), Constants.TRY);
+
+        if (tryAsset.getUsableSize() < order.getSize()) {
+            throw new BusinessException(INSUFFICIENT_FUNDS);
+        }
+
+        // update size try asset
+        tryAsset.setUsableSize(tryAsset.getUsableSize() - order.getSize());
+
+        Asset asset = assetService.findByCustomerIdAndAssetName(order.getCustomer().getId(), order.getAssetName());
+
+        // update ammont
+        asset.setSize(asset.getSize() + order.getSize());
+
+        // set as mathed
+        order.setStatus(OrderStatus.MATCHED);
+
+        assetRepository.save(tryAsset);
+        assetRepository.save(asset);
+        return orderRepository.save(order);
+    }
+
+    /**
+     *  finds orders by id
+     * @param orderId
+     * @return
+     * @throws BusinessException
+     */
+    private Orders findOrderByOrderId(Long orderId) throws BusinessException {
+        return orderRepository.findById(orderId).orElseThrow(() -> new BusinessException(ORDER_NOT_FOUND));
     }
 }

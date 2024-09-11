@@ -33,7 +33,7 @@ public class AssetService {
      * @return
      * @throws Exception
      */
-    public List<Asset> getListAssetsForCustomer( Long customerId, Optional<String> assetName) throws Exception {
+    public List<Asset> getListAssetsForCustomer( Long customerId, Optional<String> assetName) throws BusinessException {
         List<Asset> assetList = new ArrayList<Asset>();
 
         // lets check customer
@@ -61,9 +61,8 @@ public class AssetService {
      * @throws Exception
      */
     @Transactional
-    public Asset withdrawMoney(Long customerId, Double amount, String iban) throws Exception {
-        Asset asset = assetRepository.findByCustomerIdAndAssetName(customerId, Constants.TRY)
-                .orElseThrow(() -> new BusinessException(ASSET_NOT_FOUND));
+    public Asset withdrawMoney(Long customerId, Double amount, String iban) throws BusinessException {
+        Asset asset = findByCustomerIdAndAssetName(customerId, Constants.TRY);
 
         validationsForWithdrawMoney(asset, amount, iban);
 
@@ -106,16 +105,25 @@ public class AssetService {
      * @throws Exception
      */
     @Transactional
-    public Asset depositMoney(Long customerId, Double amount) throws Exception {
-
-        Asset asset = assetRepository.findByCustomerIdAndAssetName(customerId, Constants.TRY)
-                .orElseThrow(() -> new BusinessException(ASSET_NOT_FOUND));
+    public Asset depositMoney(Long customerId, Double amount) throws BusinessException {
+        Asset asset = findByCustomerIdAndAssetName(customerId, Constants.TRY);
 
         asset.setSize(asset.getSize() + amount);
         asset.setUsableSize(asset.getUsableSize() + amount);
         return assetRepository.save(asset);
     }
 
+    /**
+     *
+     * @param customerId
+     * @param assetName
+     * @return
+     * @throws BusinessException
+     */
+    public Asset findByCustomerIdAndAssetName(Long customerId, String assetName) throws BusinessException {
+        return assetRepository.findByCustomerIdAndAssetName(customerId, assetName)
+                .orElseThrow(() -> new BusinessException(ASSET_NOT_FOUND));
+    }
 
     /**
      *
