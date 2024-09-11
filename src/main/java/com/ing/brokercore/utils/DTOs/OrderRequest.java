@@ -1,4 +1,4 @@
-package com.ing.brokercore.utils;
+package com.ing.brokercore.utils.DTOs;
 
 
 import com.ing.brokercore.utils.annotations.ValidCurrency;

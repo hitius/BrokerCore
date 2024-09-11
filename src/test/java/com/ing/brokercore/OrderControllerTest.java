@@ -4,7 +4,7 @@ import com.ing.brokercore.controllers.OrderController;
 import com.ing.brokercore.entities.Orders;
 import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.services.OrderService;
-import com.ing.brokercore.utils.OrderRequest;
+import com.ing.brokercore.utils.DTOs.OrderRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

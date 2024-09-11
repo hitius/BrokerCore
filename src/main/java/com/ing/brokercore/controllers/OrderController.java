@@ -3,7 +3,7 @@ package com.ing.brokercore.controllers;
 import com.ing.brokercore.entities.Orders;
 import com.ing.brokercore.enums.OrderSide;
 import com.ing.brokercore.services.OrderService;
-import com.ing.brokercore.utils.OrderRequest;
+import com.ing.brokercore.utils.DTOs.OrderRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 

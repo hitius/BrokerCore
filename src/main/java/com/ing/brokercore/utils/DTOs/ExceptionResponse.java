@@ -1,9 +1,8 @@
-package com.ing.brokercore.utils;
+package com.ing.brokercore.utils.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter @Setter @AllArgsConstructor
 public class ExceptionResponse {

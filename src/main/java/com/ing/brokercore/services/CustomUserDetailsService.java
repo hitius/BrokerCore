@@ -3,6 +3,7 @@ package com.ing.brokercore.services;
 import com.ing.brokercore.entities.Customer;
 import com.ing.brokercore.repositories.CustomerRepository;
 import com.ing.brokercore.utils.BusinessException;
+import com.ing.brokercore.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(customer.getUsername())
                 .password(customer.getPassword())
-                .roles(customer.getRole().replace("ROLE_", ""))
+                .roles(customer.getRole().replace(Constants.ROLE_, Constants.EMPTY_STRING))
                 .build();
     }
 }

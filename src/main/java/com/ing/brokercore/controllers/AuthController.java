@@ -1,10 +1,11 @@
 package com.ing.brokercore.controllers;
 
 import com.ing.brokercore.entities.Customer;
-import com.ing.brokercore.repositories.CustomerRepository;
+import com.ing.brokercore.services.CustomerService;
+import com.ing.brokercore.utils.BusinessException;
+import com.ing.brokercore.utils.DTOs.CustomerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,24 +13,19 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private CustomerService customerService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Customer customer) {
-        // Kullanıcının şifresini şifreleyerek kaydet
-        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-        customerRepository.save(customer);
-        return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<CustomerResponse> register(@RequestBody Customer customer) {
+        customer = customerService.savePassword(customer);
+
+        CustomerResponse response = new CustomerResponse("User registered successfully", customer);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Customer> getProfile(@RequestParam String username) {
-        // Kendi bilgilerine erişim sağla
-        Customer customer = customerRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<Customer> getProfile(@RequestParam String username) throws BusinessException {
+        Customer customer = customerService.getProfile(username);
         return ResponseEntity.ok(customer);
     }
 

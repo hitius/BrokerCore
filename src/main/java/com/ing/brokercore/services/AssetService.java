@@ -26,6 +26,9 @@ public class AssetService {
     @Autowired
     CustomerService customerService;
 
+    @Autowired
+    MoneyTransferService moneyTransferService;
+
     /**
      * gives asset list for customer
      * @param customerId
@@ -133,7 +136,7 @@ public class AssetService {
      * @return
      */
     private Boolean someMoneyTransferMethod(Asset asset, Double amount, String iban) {
-        // do some tranfer
-        return true;
+        // do some imaginary transfer
+        return moneyTransferService.someMoneyTransferMethod(asset, amount, iban);
     }
 }
