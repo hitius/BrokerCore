@@ -22,9 +22,6 @@ public class BusinessExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
-        // for development
-        System.out.println("An error occurred: " + ex.getMessage());
-
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage(), HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);

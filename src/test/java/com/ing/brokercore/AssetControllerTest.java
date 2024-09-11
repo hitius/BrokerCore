@@ -3,6 +3,7 @@ package com.ing.brokercore;
 import com.ing.brokercore.controllers.AssetController;
 import com.ing.brokercore.entities.Asset;
 import com.ing.brokercore.services.AssetService;
+import com.ing.brokercore.utils.Constants;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +30,7 @@ public class AssetControllerTest {
     public void testListAssets() throws Exception {
         // Setup
         Long customerId = 1L;
-        Optional<String> assetName = Optional.of("AssetName");
+        Optional<String> assetName = Optional.of(Constants.TRY);
         List<Asset> mockAssetList = new ArrayList<>();
         when(assetService.getListAssetsForCustomer(customerId, assetName)).thenReturn(mockAssetList);
 
